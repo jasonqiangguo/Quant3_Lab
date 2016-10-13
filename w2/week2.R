@@ -1,78 +1,8 @@
-library(foreign)
-library(dplyr)
-setwd("/Users/qg251/Google Drive/Quant3_TA/TA/w2")
-
-# Homework 1
-# 2.a
-d1 <- read.dta("conflict.dta")
-plot(table(d1$war))
-
-
-# 2.b sketch the likelihood for the lambda estimator
-log.likelihood <- function(betas){
-  lambda <- exp(d1$constant*betas[1] + d1$ethfrac*betas[2] + d1$lpop*betas[3] + d1$interaction*betas[4])
-  l <- -sum(dpois(d1$war, lambda, log = TRUE))
-}
-
-# MLE
-set.seed(333)
-initial <- rnorm(4,mean=0,sd=1)
-mle <- optim(initial, fn=log.likelihood, method="BFGS",hessian=TRUE)
-betas <- mle$par
-cov <- solve(mle$hessian)
-betase <- sqrt(diag(cov))
-
-# 2.c
-# single parameter wald-test (betahat - beta)/se(betahat) ~ Normal distribution, null hypothesis here is beta = 0
-# Or, test for multicoefficients, Beta %*% Hessian %*% Beta^T ~ chiqsquare distribution with degree
-
-pchisq(t(betas[3:4]) %*% mle$hessian[3:4, 3:4] %*% betas[3:4], 2, lower.tail = FALSE)
-
-
-2*pnorm(betas[3]/betase[3], 0, 1, lower.tail = FALSE)
-2*pnorm(betas[4]/betase[4], 0, 1, lower.tail = FALSE)
-
-
-# likelihood ratio test, let us set H0 as that coefficients for lpop and interaction term are zero
-# It is a test for the entire model fit
-log.likelihood.null <- function(betas){
-  lambda <- exp(d1$constant*betas[1] + d1$ethfrac*betas[2])
-  l <- -sum(dpois(d1$war, lambda, log = TRUE))
-}
-
-initial.null <- rnorm(2,mean = 0, sd = 1)
-mlenull <- optim(initial.null, fn=log.likelihood.null, method="BFGS", hessian=TRUE)
-mleest.null<- mlenull$par
-
-llmax <- -log.likelihood(betas)
-llnull <- -log.likelihood.null(betas.null)
-
-lrs = llmax - llnull
-# It comes from tylor expansion
-dev = 2*lrs
-pchisq(dev, 2, lower.tail = FALSE)
-
-# 2.d
-# replicate data ten times
-replicate(10, d1)
-newdata <- data.frame(matrix(unlist(rep(d1, each = 10)), ncol = 6, nrow = 1610))
-names(newdata) <- names(d1)
-
-log.likelihood.rep <- function(betas){
-  lambda <- exp(newdata$constant*betas[1] + newdata$ethfrac*betas[2] + newdata$lpop*betas[3] + newdata$interaction*betas[4])
-  l <- -sum(dpois(newdata$war, lambda, log = TRUE))
-}
-
-# MLE
-set.seed(333)
-initial <- rnorm(4,mean=0,sd=1)
-mle.rep <- optim(initial, fn=log.likelihood.rep, method="BFGS",hessian=TRUE)
-betas.rep <- mle.rep$par
-cov.rep <- solve(mle.rep$hessian)
-betase.rep <- sqrt(diag(cov.rep))
-
-# what is the difference? Standard errors go down while the MLE of the parameters remain the same.
-
+##################################################
+## Binary Choice Model 
+## Instructor: Jason Guo
+## Quant III Lab 2
+#################################################
 
 # Probit model
 # Actual Data
@@ -130,7 +60,7 @@ lines(18:80, pred$fit + pred$se.fit * 1.96, col="grey80")
 
 plot.data <- data.frame(age=18:80, pred = pred$fit, lo = pred$fit - pred$se.fit * 1.96, hi=pred$fit + pred$se.fit * 1.96)
 
-# more fancy plot with ggplot2
+# much fancier plot with ggplot2
 library(ggplot2)
 plot <- ggplot(plot.data, aes(x=age, y=pred)) +
   geom_ribbon(aes(ymin=lo, ymax=hi), alpha=0.1, fill="red") + 
