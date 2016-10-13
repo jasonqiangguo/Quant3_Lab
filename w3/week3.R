@@ -1,5 +1,5 @@
 #########################################################
-## Count Data Modeling and Multiple Category Data odeling
+## Count Data Modeling and Multiple Category Data Modeling
 ## Instructor: Jason Guo
 ## Quant III Lab 3
 #########################################################
