@@ -1,8 +1,7 @@
 ################################################
-## Estimating Possion Distribution Parameters 
+## MLE Example: Estimating Possion Distribution Parameters 
 ## Instructor: Jason Guo
 ## Quant III Lab 1
-## Sep 15th
 ################################################
 
 library(foreign)
