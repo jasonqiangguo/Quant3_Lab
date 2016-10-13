@@ -6,7 +6,7 @@ This repository contains a selection of recitation materials prepared by Jason G
 
 - [Maximum Likelihood Estimation in R](w1/week1.R)
 - [Binary Choice Model and Marginal Effects](w2/week2.R)
-- [Count Data Modeling and Multiple Category Data odeling](w3/week3.R)
+- [Count Data Modeling and Multiple Category Data Modeling](w3/week3.R)
 
 ## Duration models ##
 - [Duration Model](w4/week4.R)
