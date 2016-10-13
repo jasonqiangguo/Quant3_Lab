@@ -12,6 +12,6 @@ This repository contains a selection of recitation materials prepared by Jason G
 - [Duration Model](w4/week4.R)
 
 ## Time-series analysis ##
-
+- [Introduction to Time-series Analysis](w5/week5.R)
 ## Bayesian statistics ##
 
