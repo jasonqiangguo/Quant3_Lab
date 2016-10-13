@@ -1,3 +1,10 @@
+#########################################################
+## Durational Model
+## Instructor: Jason Guo
+## Quant III Lab 4
+#########################################################
+
+
 library(foreign)
 library(survival)
 install.packages("KMsurv")

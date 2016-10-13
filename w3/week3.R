@@ -1,3 +1,9 @@
+#########################################################
+## Count Data Modeling and Multiple Category Data odeling
+## Instructor: Jason Guo
+## Quant III Lab 3
+#########################################################
+
 library(foreign)
 setwd("/Users/qiangguo/Dropbox/Quant3_TA/TA/w3")
 
@@ -91,15 +97,15 @@ zip.zero <- zip.coefs$zero
 zip.se <- sqrt(diag(vcov(zip)))
 
 
-
+############################################
 # ordered probit model
+############################################
 
 # reading the data
 data <- read.csv("week3_data.csv", stringsAsFactors=F)
 
 
 # You can do this manually
-############################################
 # Code to run a four-category ordered probit
 # Chris Adolph (University of Washington)
 
@@ -204,7 +210,7 @@ lines(18:80, plot.data[1,], lty=3)
 lines(18:80, plot.data[3,], lty=3)
 
 
-# multinomial logit model
+# use built-in function to run multinomial logit model
 rm(list=ls())
 
 load(file = "united_fmly_2012.rda")
@@ -301,6 +307,22 @@ b <- b + scale_x_continuous(name = "Sex Reference", limits = c(0.8, 2.2), breaks
 b <- b + ylab("Predicted Probilities")
 b
 
+# there is another option: we can use zelig to help us draw the predicted probabilities
+library(Zelig)
+data(turnout)
+z.out <- zelig(vote ~ race + educate + age + I(age^2) + income,
+               model = "logit", data = turnout)
+age.range <- 18:95
+x.low <- setx(z.out, educate = 12, age = age.range)
+x.high <- setx(z.out, educate = 16, age = age.range)
+s.out <- sim(z.out, x = x.low, x1 = x.high)
+
+ci.plot(s.out, xlab = "Age in Years",
+        ylab = "Predicted Probability of Voting",
+        main = "Effect of Education and Age on Voting Behavior",  ci = c(95, 99, 99.9))
+legend(45, 0.52, legend = c("College Education (16 years)",
+                            "High School Education (12 years)"), col = c("blue","red"), 
+       lty = c("solid"))
 
 #####################################################################
 ## conditional logit model: the estimation of the multinomial logit
