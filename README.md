@@ -13,6 +13,9 @@ This repository contains a selection of recitation materials prepared by Jason G
 
 ## Time-series analysis ##
 - [Introduction to Time-series Analysis](w5/week5.R)
+- [Stationarity](w6/stationary_time_series.R)
+- [Response Function](w6/response_functions_ADL.R)
+- [Cointegration and Error Correction Model](w6/cointegration_ecm.R)
 
 ## Bayesian statistics ##
 
