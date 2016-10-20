@@ -1,8 +1,8 @@
 ################################################################
 ## Cointegration and error-correction models
-## Author: Pablo Barberá
-## Quant III Lab 9
-## October 31th 2013
+## Author: Qiang Guo
+## Quant III Week 6
+## October 20th
 ################################################################
 
 #install.packages("urca")

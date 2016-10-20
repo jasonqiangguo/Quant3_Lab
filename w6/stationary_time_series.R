@@ -1,8 +1,8 @@
 ################################################################
 ## Time Series and Stationarity
-## Author: Pablo Barberá
-## Quant III Lab 8
-## October 24th 2013
+## Author: Jason Qiang Guo
+## Quant III Week 6
+## October 20th
 ################################################################
 
 #install.packages("urca")
