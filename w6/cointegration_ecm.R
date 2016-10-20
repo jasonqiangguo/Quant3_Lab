@@ -76,6 +76,13 @@ summary(lm(y ~ x))
 
 ## ERROR CORRECTION MODEL(S)
 
+set.seed(123)
+t <- 500
+x <- rnorm(t)
+for (i in 2:t){ x[i] <- x[i-1] + rnorm(1) }
+beta <- 3
+y <- beta * x + rnorm(t)
+
 ## Engle-Granger two-step
 ## a) estimate cointegrating relationship
 reg <- lm(y~x)
