@@ -44,35 +44,35 @@ response.function <- function(phi, beta, gamma, t=200, impulse=FALSE, unit=FALSE
 
 
 # impulse response functions when phi = 0
-response.function(phi=0, beta, gamma, impulse=TRUE, plot=4)
+response.function(phi=0, beta, gamma, impulse=TRUE)
 
 # unit response functions when phi = 0
-response.function(phi=0, beta, gamma, unit=TRUE, plot=4)
+response.function(phi=0, beta, gamma, unit=TRUE)
 
 
 # impulse response functions when phi = 1
-response.function(phi=1, beta, gamma, impulse=TRUE, plot=4)
+response.function(phi=1, beta, gamma, impulse=TRUE)
 
 # unit response functions when phi = 1
-response.function(phi=1, beta, gamma, unit=TRUE, plot=4)
+response.function(phi=1, beta, gamma, unit=TRUE)
 
 # impulse response functions when gamma=0
-response.function(phi=0.95, beta, gamma=0, impulse=TRUE, plot=4)
+response.function(phi=0.95, beta, gamma=0, impulse=TRUE)
 
 # unit response functions when gamma=0
-response.function(phi=0.95, beta, gamma=0, unit=TRUE, plot=4)
+response.function(phi=0.95, beta, gamma=0, unit=TRUE)
 
 # impulse response functions when beta=0
-response.function(phi=0.95, beta=0, gamma, impulse=TRUE, plot=4)
+response.function(phi=0.95, beta=0, gamma, impulse=TRUE)
 
 # unit response functions when beta=0
-response.function(phi=0.95, beta=0, gamma, unit=TRUE, plot=4)
+response.function(phi=0.95, beta=0, gamma, unit=TRUE)
 
 # impulse response functions when gamma = - phi * beta
-response.function(phi=0.95, beta, gamma=-phi * beta, impulse=TRUE, plot=4)
+response.function(phi=0.95, beta, gamma=-phi * beta, impulse=TRUE)
 
 # unit response functions when gamma = - phi * beta
-response.function(phi=0.95, beta, gamma=-phi * beta, unit=TRUE, plot=4)
+response.function(phi=0.95, beta, gamma=-phi * beta, unit=TRUE)
 
 
 
