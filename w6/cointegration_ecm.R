@@ -108,9 +108,9 @@ lm(diff(y) ~ -1 + diff(x) + y[-t] + x[-t])
 ## (asymptotically, these two models are identical, after some algebra)
 
 
-################################################################
-## x is I(1), y is I(1), error is white noise, lower adjustment speed
-################################################################
+################################################################################
+## x is I(1), y is I(1), error has serial correlation, lower adjustment speed ##
+################################################################################
 
 # let's simulate some data with lower adjustment speed
 # i.e., it takes more than one period to "re-equilibrate"
@@ -153,7 +153,7 @@ lm(diff(y) ~ -1 + diff(x) + y[-t] + x[-t])
 
 
 ################################################################
-## x is I(1), y is I(1), error is I(1)
+## x is I(1), y is I(1), error is white noise
 ################################################################
 
 # what happens when x and y are not co-integrated?
