@@ -15,10 +15,10 @@ This repository contains a selection of recitation materials prepared by Jason G
 - [Introduction to Time-series Analysis](w5/week5.R)
 - [Stationarity](w6/stationary_time_series.R)
 - [Response Function](w6/response_functions_ADL.R)
-- [Cointegration and Error Correction Model](w6/cointegration_ecm.R) [Slides](w6/w6.pdf)
+- [Cointegration and Error Correction Model](w6/cointegration_ecm.R) [(Slides)](w6/w6.pdf)
 
 ## Time-Series-Cross-Section Data
-- [Panel Corrected Standard Errors](w7/w7.R) [Slides](w7/TSCS.pdf)
+- [Panel Corrected Standard Errors](w7/w7.R) [(Slides)](w7/TSCS.pdf)
 
 ## Bayesian statistics ##
 
