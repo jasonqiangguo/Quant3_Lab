@@ -6,7 +6,6 @@
 ################################################################
 
 library(foreign)
-install.packages("pcse")
 library(pcse)
 library(car)
 library(lmtest)
