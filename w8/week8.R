@@ -17,7 +17,7 @@ setwd("~/Dropbox/Quant3_TA/TA/w8")
 ## Linear Model ##
 ##################
 
-# linear model fixed effects in R
+# linear model fixed effects (within effects) in R
 data("Produc", package = "plm")
 fe <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
           data = Produc, index = c("state","year"), model = "within")
@@ -33,7 +33,7 @@ be <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
           data = Produc, index = c("state","year"), model = "between")
 summary(be)
 
-# another way to do it: lmer function is better for varying intercept and varying coefficients
+# another way to do random effects: lmer function is better for varying intercept and varying coefficients
 re2 <- lmer(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp + (1 | state),
           data = Produc)
 summary(re2)
@@ -47,8 +47,17 @@ phtest(fe, re)
 # for probability model dealing with panel data due to the none-linearity nature of the link function
 
 # but still we can do it with conditional logit model
-
 BESpanel <- read.csv(url("http://www.polsci.ucsb.edu/faculty/glasgow/ps206/ps206data6.txt"), header=T, sep="\t")
+
+### This is a 7 wave panel from the BES, conducted between 2005 and 2010
+### persfin = 5 point scale on retrospective personal finances, higher is better
+### natecon = 5 point scale on retrospective national economy, higher is better
+### unsatdem is a 4 point scale on satisfaction w/democracy, higher is worse
+### attpol is a 10 point scale on attention to politics, higher is more
+### infpol is a 10 point scale on perceived influence on politics, higher is more
+### age in years
+### gender is 0 for men, 1 for women
+### natpess is 1 if pessimistic about national economy, 0 otherwise
 
 # conditional logit model with fixed effects
 logit.fe <- clogit(natpess ~ unsatdem+attpol+infpol+age + strata(besid), data=BESpanel)
