@@ -19,6 +19,6 @@ This repository contains a selection of recitation materials prepared by Jason G
 
 ## Time-Series-Cross-Section Data
 - [Panel Corrected Standard Errors](w7/w7.R) [(Slides)](w7/TSCS.pdf)
-
+- [Fixed Effects and Random Effects in Panel Data](w8/week8.R) [(slides)](w8/TSCS2.pdf) 
 ## Bayesian statistics ##
 
