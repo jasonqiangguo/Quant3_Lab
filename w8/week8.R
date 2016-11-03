@@ -9,6 +9,7 @@ library(plm)
 library(lme4)
 library(pglm)
 library(survival)
+
 library(MSwM)
 
 setwd("~/Dropbox/Quant3_TA/TA/w8")
@@ -23,12 +24,17 @@ fe <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 summary(fe)
 
 # random effects 
-re <- plm(log(gsp) ~ -1 + log(pcap) + log(pc) + log(emp) + unemp,
+re <- plm(log(gsp) ~  log(pcap) + log(pc) + log(emp) + unemp,
           data = Produc, index = c("state","year"), model = "random")
 summary(re)
 
+# between effects 
+be <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+          data = Produc, index = c("state","year"), model = "between")
+summary(be)
+
 # another way to do it: lmer function is better for varying intercept and varying coefficients
-re2 <- lmer(log(gsp) ~ -1 +  log(pcap) + log(pc) + log(emp) + unemp + (1 | state),
+re2 <- lmer(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp + (1 | state),
           data = Produc)
 summary(re2)
 
@@ -50,9 +56,14 @@ summary(logit.fe)
 
 # using cox model with single discrete time, exactly the same thing!
 coxph(Surv(time = rep(1, 16186), natpess) ~ unsatdem + attpol+infpol+age + strata(besid), data=BESpanel, method = "exact")
-dispute.data <- read.dta("orum.dta")
-clogit(dispute)
 
-dispute.data$py.t <- as.factor(dispute.data$py)
+# markov switching model
+y <- rep(NA, 300)
+# state 1
+for (i in c(1:100, 151:180, 251:300)){y[i] <- -3 * x[i] + 1 + rnorm(1)}
+for (i in c(101:150, 181:250)){y[i] <- 2 * x[i] + 3 + rnorm(1)}
+plot(ts(y))
 
-# markov transition model
+mod <- lm(y~x)
+mod.msm <- msmFit(mod, k = 2, sw = c(T, T, F))
+plotProb(mod.msm, which=1)
