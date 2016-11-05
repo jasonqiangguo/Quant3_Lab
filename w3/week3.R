@@ -342,7 +342,7 @@ data("TravelMode", package = "AER")
 head(TravelMode)
 
 
-# data preparation: here shape = "long" means data are prepared like longitudinal data.
+# data preparation: here shape = "long" means each row is an alternative.
 # The name of the variable that contains the information about the choice situations can
 # be indicated using the chid.var argument. alt.var which indicates the name of the
 # variable that contains the alternatives
