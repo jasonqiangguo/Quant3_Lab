@@ -21,5 +21,8 @@ This repository contains a selection of recitation materials prepared by Jason G
 - [Panel Corrected Standard Errors](w7/w7.R) [(Slides)](w7/TSCS.pdf)
 - [Fixed Effects and Random Effects in Panel Data](w8/week8.R) [(slides)](w8/TSCS2.pdf) 
 
+## Sample Selection Model
+- [Tobit Model and Heckman Selection Model](w9/week9.R) [(slides)](w9/w9/pdf)
+
 ## Bayesian statistics ##
 
