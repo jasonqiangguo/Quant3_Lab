@@ -16,13 +16,13 @@ head(Mroz87)
 # Female labor supply (lfp = labour force participation)
 
 ## Outcome equations without correcting for selection
-# I() means "as-is" -- do calculation in parentheses then use as variable
 
 ## Comparison of linear regression and selection model
-
+# ols regression 
 outcome1 <- lm(wage ~ exper, data = Mroz87)
 summary(outcome1)
 
+# heckman two-step estimation
 selection1 <- selection(selection = lfp ~ age + I(age^2) + faminc + kids + educ, outcome = wage ~ exper, 
                         data = Mroz87, method = "2step")
 summary(selection1)
@@ -33,42 +33,43 @@ curve(selection1$coeff[1] + selection1$coeff[2]*x, col="orange", lwd="2", add=TR
 
 
 ## A more complete model comparison
-
+# ols regression
 outcome2 <- lm(wage ~ exper + I( exper^2 ) + educ + city, data = Mroz87)
 summary(outcome1)
 
 ## Correcting for selection
-
+# two-step estimation
 selection.twostep2 <- selection(selection = lfp ~ age + I(age^2) + faminc + kids + educ, outcome = wage ~ exper + I(exper^2) + educ + city, 
                                 data = Mroz87, method = "2step")
 summary(selection.twostep2)
 
+# full likelihood estimation
 selection.mle <- selection(selection = lfp ~ age + I(age^2) + faminc + kids + educ, outcome = wage ~ exper + I(exper^2) + educ + city, 
                            data = Mroz87, method = "mle")
 summary(selection.mle)
 
 
-## Heckman model selection "by hand" ##
+# Heckman model selection "by hand" #
 
 seleqn1 <- glm(lfp ~ age + I(age^2) + faminc + kids + educ, family=binomial(link="probit"), data=Mroz87)
 summary(seleqn1)
 
-## Calculate inverse Mills ratio by hand ##
+# Calculate inverse Mills ratio by hand #
 
 Mroz87$IMR <- dnorm(seleqn1$linear.predictors)/pnorm(seleqn1$linear.predictors)
 
-## Outcome equation correcting for selection ##
+# Outcome equation correcting for selection #
 
 outeqn1 <- lm(wage ~ exper + I(exper^2) + educ + city + IMR, data=Mroz87, subset=(lfp==1))
 summary(outeqn1)
 
-## compare to selection package -- coefficients right, se's wrong
-summary(selection.twostep2)
+# compare to selection function using MLE -- coefficients right, se's wrong
+summary(selection.mle)
 
 
-## interpretation
-## If our independent variables does not appear in the selection equation, we can interpret beta as in linear regression
-## If it does appear in the selection equation, we must calculate:
+# interpretation
+# If our independent variables does not appear in the selection equation, we can interpret beta as in linear regression
+# If it does appear in the selection equation, we must calculate:
 
 beta.educ.sel <- selection.twostep2$coefficients[6]
 beta.educ.out <- selection.twostep2$coefficients[10]
