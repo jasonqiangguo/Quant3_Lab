@@ -22,7 +22,7 @@ This repository contains a selection of recitation materials prepared by Jason G
 - [Fixed Effects and Random Effects in Panel Data](w8/week8.R) [(slides)](w8/TSCS2.pdf) 
 
 ## Sample Selection Model
-- [Tobit Model and Heckman Selection Model](w9/week9.R) [(slides)](w9/w9/pdf)
+- [Tobit Model and Heckman Selection Model](w9/week9.R) [(slides)](w9/w9.pdf)
 
 ## Bayesian statistics ##
 
