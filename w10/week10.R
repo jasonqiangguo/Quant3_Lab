@@ -108,7 +108,7 @@ dev.off()
 ## Gibbs Sampler #
 ##################
 
-y <- rnorm(200, 5, 20)
+y <- rnorm(20, 5, 20)
 
 gibbs <- function(n.sim, mu0, tau2, a, b){
   n <- length(y)
@@ -122,5 +122,11 @@ gibbs <- function(n.sim, mu0, tau2, a, b){
   theta.sim
 }
 
-plot(density(gibbs(1000, 30, 100, 5, 5)[,1]))
+# posterior distribution
+plot(density(gibbs(1000, 100, 100, 5, 5)[,1]))
+# posterior mean
+mean(gibbs(1000, 100, 100, 5, 5)[,1])
+plot(density(gibbs(1000, 30, 100, 5, 5)[,2]))
+# mle mean 
 plot(density(y))
+mean(y)
