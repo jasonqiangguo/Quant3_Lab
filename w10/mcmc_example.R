@@ -67,3 +67,7 @@ plot(density(gibbs(1000, 100, 100, 5, 5)[,1]))
 # posterior mean
 mean(gibbs(1000, 100, 100, 5, 5)[,1])
 plot(density(gibbs(1000, 30, 100, 5, 5)[,2]))
+
+#######################################
+#### metropolis-hastings algorithm ####
+#######################################
