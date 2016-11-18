@@ -25,4 +25,4 @@ This repository contains a selection of recitation materials prepared by Jason G
 - [Tobit Model and Heckman Selection Model](w9/week9.R) [(slides)](w9/w9.pdf)
 
 ## Bayesian statistics ##
-- [MCMC](w10/week10.R) [(slides)](w10/week10.pdf)
+- [MCMC.introduction](w10/week10_introduction.R) [(slides)](w10/week10.pdf)
