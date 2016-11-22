@@ -119,6 +119,7 @@ m <- as.matrix(cbind(ytry, xtry))
 h <- seq(4, 80, by = 3)
 m[h,]
 
+# lets say the prior for mu is N(-5, 1) and the prior for sigma2 is InverseGamma(2,2)
 m.data <- data.frame(metro = metro(-5, 1, 2, 2, 2, n.sim = 1000000, burnin = 20000, thin = 4))
 g.data <- data.frame(gibbs = gibbs(-5, 1, 2, 2, 10000))
 
