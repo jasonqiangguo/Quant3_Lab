@@ -82,21 +82,23 @@ ggs_compare_partial(theta50)
 ggs_autocorrelation(theta50)
 
 # plot the ideological positions of senators
+HPD <- data.frame(HPDinterval(mcmc(rbind(s[[1]], s[[2]], s[[3]]))))
 plot.data <- as.data.frame(monitor(stan.fit))
 plot.data.theta <- plot.data[grep("theta", rownames(plot.data)),]
 plot.data.theta$name <- rownames(rc$votes)
 plot.data.theta$partyid <- rc$legis.data$party
-names(plot.data.theta)[4:8] <- c("OuterLow", "InnerLow", "median", "InnerHigh", "OuterHigh")
+plot.data.theta$lower <- HPD$lower
+plot.data.theta$upper <- HPD$upper
 
 pdf("senate.pdf", height = 12, width = 8)
 p <- ggplot(plot.data.theta, aes(y= reorder(name, -mean), x = mean)) + geom_point() +
-  geom_linerangeh(aes(xmin= OuterLow, xmax=OuterHigh, color=partyid, linetype = partyid)) + 
+  geom_linerangeh(aes(xmin= lower, xmax= upper, color=partyid, linetype = partyid)) + 
   theme_bw() + theme(axis.title.y=element_blank(), panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(), legend.position = c(0.15,0.2),
                      plot.title = element_text(hjust = 0.4)) +
   scale_color_manual(name = "Party ID", values = c("D" = "red", "I" = "black", "R" = "blue"), labels = c("Democrat", "Independent", "Republican")) + 
   scale_linetype_manual(name = "Party ID", values = c("D" = 1, "I" = 2, "R" = 4), labels = c("Democrat", "Independent", "Republican")) + 
-  labs(x = "Ideological Position", title = "113th Congress: Senate")  
+  labs(x = "Ideological Position with 95% HPD Interval", title = "113th Congress: Senate")  
 p
 dev.off()
 
