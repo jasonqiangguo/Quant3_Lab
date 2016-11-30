@@ -119,7 +119,6 @@ m <- as.matrix(cbind(ytry, xtry))
 h <- seq(4, 80, by = 3)
 m[h,]
 
-# lets say the prior for mu is N(-5, 1) and the prior for sigma2 is InverseGamma(2,2)
 m.data <- data.frame(metro = metro(-5, 1, 2, 2, 2, n.sim = 1000000, burnin = 20000, thin = 4))
 g.data <- data.frame(gibbs = gibbs(-5, 1, 2, 2, 10000))
 
@@ -138,6 +137,8 @@ plot(density(pdata$gibbs.2))
 #########
 
 library(rstan)
+library(ggmcmc)
+library(coda)
 
 hmc_code <- '
 data {
@@ -159,6 +160,18 @@ y[n] ~ normal(mu, sqrt(sigma2));
 '
 
 data <- list(N=length(y), y=y)
-fit <- stan(model_code=hmc_code, data=data, iter=5000, warmup = 200, thin = 3, chains=4)
+fit <- stan(model_code=hmc_code, data=data, iter=500, warmup = 200, thin = 3, chains=3)
 monitor(fit)
-traceplot(fit, pars='mu')
+
+# convergence check, use "coda" and "ggmcmc"
+
+# convert a stan object to a coda object
+s <- As.mcmc.list(fit, pars = c("mu", "sigma2"))
+
+# use ggs to convert coda object to ggmcmc object for graphics
+S <- ggs(s, inc_warmup = TRUE)
+alpha1 <- dplyr::filter(S, Parameter == "mu")
+ggs_running(S)
+ggs_traceplot(alpha1, original_burnin = TRUE)
+ggs_compare_partial(S)
+ggs_autocorrelation(S)
