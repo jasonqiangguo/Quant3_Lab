@@ -11,9 +11,11 @@ library(rstan)
 library(ggplot2)
 library(ggstance)
 library(ggmcmc)
+library(coda)
+set.seed(2016)
 
 
-setwd("~/Dropbox/Quant3_TA/TA/w11")
+setwd("~/GitHub/Quant3_Lab/w11")
 # loading roll call data
 # Source: http://jackman.stanford.edu/blog/
 load("rc.rda")
@@ -60,12 +62,19 @@ y <- y[-miss]
 ## data and initial values
 stan.data <- list(J=J, K=K, N=N, j=j, k=k, y=y)
 
-stan.fit <- stan(model_code=stan.code, data=stan.data, iter=500, warmup=200,
-                 chains=3, thin=2)
+n.chain <- 3
+myinits <- list()
+for (i in 1:n.chain) {
+  myinits[[i]] <- list(alpha = rep(0.5, K), beta = rep(0.5, K), theta = rep(0.5, J))
+}
 
-save(stan.fit, file = "stan_fit_irt.Rdata")
+stan.fit <- stan(model_code=stan.code, data=stan.data, iter=1000, warmup=200,
+                 chains= 3, thin=2, init = myinits)
 
-load("stan_fit_irt.Rdata")
+
+##########################################################################
+
+load("stan_fit_irt_1000.Rdata")
 
 
 # convergence check, use "coda" and "ggmcmc"
@@ -75,11 +84,12 @@ s <- As.mcmc.list(stan.fit, pars = c("theta"))
 
 # use ggs to convert coda object to ggmcmc object for graphics
 S <- ggs(s, inc_warmup = TRUE)
-theta50 <- dplyr::filter(S, Parameter == "theta[50]")
-ggs_running(theta50)
-ggs_traceplot(theta50, original_burnin = TRUE)
-ggs_compare_partial(theta50)
-ggs_autocorrelation(theta50)
+theta14 <- dplyr::filter(S, Parameter == "theta[14]")
+ggs_running(theta14)
+ggs_traceplot(theta14, original_burnin = TRUE)
+ggs_compare_partial(theta14)
+ggs_autocorrelation(theta14)
+ggs_geweke(S)
 
 # plot the ideological positions of senators
 HPD <- data.frame(HPDinterval(mcmc(rbind(s[[1]], s[[2]], s[[3]]))))
@@ -90,17 +100,40 @@ plot.data.theta$partyid <- rc$legis.data$party
 plot.data.theta$lower <- HPD$lower
 plot.data.theta$upper <- HPD$upper
 
-pdf("senate.pdf", height = 12, width = 8)
 p <- ggplot(plot.data.theta, aes(y= reorder(name, -mean), x = mean)) + geom_point() +
   geom_linerangeh(aes(xmin= lower, xmax= upper, color=partyid, linetype = partyid)) + 
   theme_bw() + theme(axis.title.y=element_blank(), panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(), legend.position = c(0.15,0.2),
-                     plot.title = element_text(hjust = 0.4)) +
-  scale_color_manual(name = "Party ID", values = c("D" = "red", "I" = "black", "R" = "blue"), labels = c("Democrat", "Independent", "Republican")) + 
+                     plot.title = element_text(hjust = 0.4, size = rel(2)), legend.text = element_text(size = 15),
+                     legend.title = element_text(size = 20)) +
+  scale_color_manual(name = "Party ID", values = c("D" = "blue", "I" = "black", "R" = "red"), labels = c("Democrat", "Independent", "Republican")) + 
   scale_linetype_manual(name = "Party ID", values = c("D" = 1, "I" = 2, "R" = 4), labels = c("Democrat", "Independent", "Republican")) + 
   labs(x = "Ideological Position with 95% HPD Interval", title = "113th Congress: Senate")  
 p
-dev.off()
+ggsave("113senate.pdf", height = 12, width = 8)
+
+
+#########################################################################################################
+# if you find democrats on the right of spectrum, you can reverse data 
+
+reverse.plot.data.theta <- plot.data.theta
+reverse.plot.data.theta$mean <- -plot.data.theta$mean
+reverse.plot.data.theta$lower <- -plot.data.theta$lower
+reverse.plot.data.theta$upper <- -plot.data.theta$upper
+
+p <- ggplot(reverse.plot.data.theta, aes(y= reorder(name, -mean), x = mean)) + geom_point() +
+  geom_linerangeh(aes(xmin= lower, xmax= upper, color=partyid, linetype = partyid)) + 
+  theme_bw() + theme(axis.title.y=element_blank(), panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), legend.position = c(0.15,0.2),
+                     plot.title = element_text(hjust = 0.4, size = rel(2)), legend.text = element_text(size = 15),
+                     legend.title = element_text(size = 20)) +
+  scale_color_manual(name = "Party ID", values = c("D" = "blue", "I" = "black", "R" = "red"), labels = c("Democrat", "Independent", "Republican")) + 
+  scale_linetype_manual(name = "Party ID", values = c("D" = 1, "I" = 2, "R" = 4), labels = c("Democrat", "Independent", "Republican")) + 
+  labs(x = "Ideological Position with 95% HPD Interval", title = "113th Congress: Senate")  
+p
+##########################################################################################################
+ggsave("113senate.pdf", width = 8, height = 12)
+
 
 ################################################################
 ## IRT WITH COVARIATES
