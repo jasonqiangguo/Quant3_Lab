@@ -41,7 +41,7 @@ model {
   beta ~ normal(0, 25);
   theta ~ normal(0, 1);
   for (n in 1:N)
-    y[n] ~  bernoulli_logit( theta[j[n]] * beta[k[n]] - alpha[k[n]] );
+    y[n] ~  bernoulli_logit(theta[j[n]] * beta[k[n]] - alpha[k[n]]);
 }
 '
 
@@ -113,8 +113,10 @@ p
 ggsave("113senate.pdf", height = 12, width = 8)
 
 
-#########################################################################################################
-# if you find democrats on the right of spectrum, you can reverse data 
+##############################################################################################################
+# if you find democrats on the right of spectrum, you can reverse data. This issue can rise due to reflection
+# problem, as theta_i * b_j - d_j = -theta_i * -b_j - d_j clearly leads to multimode for theta and b_j
+##############################################################################################################
 
 reverse.plot.data.theta <- plot.data.theta
 reverse.plot.data.theta$mean <- -plot.data.theta$mean
