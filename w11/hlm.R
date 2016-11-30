@@ -1,3 +1,9 @@
+#############################################################
+## Bayesian Statistics: Multilevel model/ Hierarchical Model
+## Instructor: Jason Guo
+## Quant III Lab 11
+#############################################################
+
 rm(list=ls())
 
 
@@ -5,15 +11,9 @@ library(pscl)
 library(rstan)
 library(coda)
 library(ggplot2)
-library(MCMCpack)
+library(ggmcmc)
 
-
-# Function to convert stan fit objects to coda objects
-stan_to_coda <- function(fit){
-  t <- extract(fit, permuted=FALSE, inc_warmup=FALSE)
-  mcmc <- mcmc.list(lapply(1:ncol(t), function(x) mcmc(t[,x,])))
-  return(mcmc)
-}
+# Stein's Paradox
 
 # this example is based on Jackman 310-316 and Pablo's code
 
@@ -63,52 +63,60 @@ plot(x, dgamma(x, shape=7, rate=70), type="l")
 
 
 hierarchical_code <- '
-    data {
-        int<lower=0> N; # observations
-        real y[N]; # outcome variable
-        real<lower=0> sigma; # fixed variance of observed batting averages
-    }
-    parameters {
-        real theta[N]; ## unobserved true batting averages
-        real mu; ## hyperparameter: mean of batting averages
-        real<lower=0> tau; ## hyperparameter: variance of batting averages
-    }
-    model {
-        mu ~ normal(0.225, 0.0375); ## prior about hyperparameter (overall batting average)
-        tau ~ gamma(7, 70); ## priors about variance of overall batting average
-        for (n in 1:N){;
-            y[n] ~ normal(theta[n], sigma);
-            theta[n] ~ normal(mu, tau);
-        }
-    }
+data {
+int<lower=0> N; # observations
+real y[N]; # outcome variable
+real<lower=0> sigma; # fixed variance of observed batting averages
+}
+parameters {
+real theta[N]; ## unobserved true batting averages
+real mu; ## hyperparameter: mean of batting averages
+real<lower=0> tau; ## hyperparameter: variance of batting averages
+}
+model {
+mu ~ normal(0.225, 0.0375); ## prior about hyperparameter (overall batting average)
+tau ~ gamma(7, 70); ## priors about variance of overall batting average
+for (n in 1:N){;
+y[n] ~ normal(theta[n], sigma);
+theta[n] ~ normal(mu, tau);
+}
+}
 '
 
 data <- list(N=length(d$y), y=d$y, sigma=sigma)
-load(file = "stan_object.rda")
-fit <- stan(model_code=hierarchical_code, data=data, iter=10000, chains=4,fit = obj)
+
+n.chain <- 4
+myinits <- list()
+for (i in 1:n.chain) {
+  myinits[[i]] <- list(theta = rep(0, 18), mu = 0, tau = 0.1)
+}
+
+fit <- stan(model_code=hierarchical_code, data=data, iter=10000, chains=4, init = myinits)
 
 
 # summary results
 monitor(fit, digits_summary=3)
 
 # Assessing convergence
-mcmc <- stan_to_coda(fit)
+mcmc <- As.mcmc.list(fit, pars = "theta")
+S <- ggs(mcmc, inc_warmup = TRUE)
+theta_1_to_9 <- dplyr::filter(S, Parameter == "theta[1]"|Parameter == "theta[2]"|Parameter == "theta[3]"|
+                                Parameter == "theta[4]"|Parameter == "theta[5]"|Parameter == "theta[6]"|
+                                Parameter == "theta[7]"|Parameter == "theta[8]"|Parameter == "theta[9]")
+
+ggs_running(theta_1_to_9)
+
+ggs_traceplot(theta_1_to_9, original_burnin = TRUE)
+
+ggs_autocorrelation(theta_1_to_9)
+
+ggs_compare_partial(theta_1_to_9)
+
+ggs_geweke(S) #between -2 and 2 is good# 
 
 
-# 1) Looking at traceplots
-traceplot(mcmc, pars='theta', inc_warmup=FALSE, ask=TRUE)
-
-# 4) Geweke tests
-geweke.diag(mcmc)
-geweke.plot(mcmc, ask=TRUE)
-
-
-# 5) Heidelberger-Welch test of non-stationarity
+# Heidelberger-Welch test of non-stationarity
 heidel.diag(mcmc)
-
-# 6) looking at serial correlation in chains
-autocorr(mcmc)
-autocorr.plot(mcmc, ask=TRUE)
 
 
 # computing rmse
@@ -141,7 +149,6 @@ p + geom_point() + geom_line() + theme_bw() + coord_flip() +
   geom_vline(xintercept=1, alpha=1/3, size=0.2) +
   geom_vline(xintercept=2, alpha=1/3, size=0.2) +
   geom_vline(xintercept=3, alpha=1/3, size=0.2)
-
 
 
 

@@ -91,6 +91,9 @@ ggs_compare_partial(theta14)
 ggs_autocorrelation(theta14)
 ggs_geweke(S)
 
+#Heidelberger-Welch test of non-stationarity
+heidel.diag(S)
+
 # plot the ideological positions of senators
 HPD <- data.frame(HPDinterval(mcmc(rbind(s[[1]], s[[2]], s[[3]]))))
 plot.data <- as.data.frame(monitor(stan.fit))
