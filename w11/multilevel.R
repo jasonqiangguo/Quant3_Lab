@@ -292,3 +292,51 @@ no_pool_stan <- stan(model_code=no_pooled_code, data=no.pool.data, iter=5000, wa
 # compare with lm fixed effects
 monitor(no_pool_stan, digits_summary = 5)
 summary(M2)
+
+
+
+####################################################
+# we can add priors for the partial pooling case ###
+####################################################
+
+partial_pooled_prior_code = '
+data {
+  int<lower=0> N;
+  int<lower=0> J;
+  int<lower=0, upper=J> county[N];
+  vector[N] x;
+  vector[N] y;
+}
+parameters {
+  vector[J] a;
+  real b;
+  real mu_a;
+  real<lower=0> sigma_y;
+  real<lower=0> sigma_a;
+  
+}
+model {
+  b ~ normal(10, 0.5);
+  sigma_a ~ inv_gamma(2, 2);
+  mu_a ~ normal(-10, 0.5);
+  a ~ normal(mu_a, sigma_a);
+  for (n in 1:N)
+    y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
+}
+'
+
+J <- length(unique(dt$county))
+county <- rep(1:85, table(dt$county))
+
+partial.pool.data <- list(N = N, J =J, x = x, y=y, county = county)
+
+partial_pool_prior_stan <- stan(model_code=partial_pooled_prior_code, data=partial.pool.data, iter=1000, warmup=200,
+                          chains= 3, thin=2)
+
+monitor(partial_pool_prior_stan, digits_summary = 5)
+
+# compare with lmer()
+coef(M1)$county
+ranef(M1)
+
+# completely different results because of the hyper-parameters of priors
