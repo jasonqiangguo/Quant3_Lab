@@ -210,7 +210,7 @@ summary(irt1)
 
 # W-NOMINATE algorithm
 library(wnominate)
-nom <- wnominate(rc, dims=1, polarity=c("Cruz (R-TX)", "Cochran (R-MS)"))
+nom <- wnominate(rc, dims=1, polarity=c("Cruz (R-TX)"))
 
 # compare three methods
 theta <- data.frame(monitor(stan.fit))[grep("theta", rownames(monitor(stan.fit))),]
