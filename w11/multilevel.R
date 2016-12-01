@@ -14,7 +14,7 @@ library(ggplot2)
 library(ggmcmc)
 
 # Stein's Paradox
-
+# Shrink towards overall mean
 # this example is based on Jackman 310-316 and Pablo's code
 
 data(EfronMorris)
@@ -151,7 +151,144 @@ p + geom_point() + geom_line() + theme_bw() + coord_flip() +
   geom_vline(xintercept=3, alpha=1/3, size=0.2)
 
 
+####################
+# multilevel model #
+####################
+
+library(lme4)
+load("example.Rdata")
+
+# let's use lmer()
+
+# complete pooling
+M0 <- lm(y ~ x, data = dt)
+summary(M0)
+
+# partial pooling, varying intercept
+M1 <- lmer(y ~ x + (1 | county) , data = dt)
+coef(M1)$county
+
+fixef(M1)
+ranef(M1)
+
+# no pooling
+M2 <- lm(y ~ -1 + x + as.factor(county), data = dt)
+summary(M2)
 
 
+###################
+# let's use Rstan #
+###################
 
+####################
+# complete pooling #
+####################
 
+complete_pooled_code = '
+data {
+  int<lower=0> N; 
+  vector[N] x;
+  vector[N] y;
+}
+parameters {
+  vector[2] beta;
+  real<lower=0> sigma;
+}
+model {
+  y ~ normal(beta[1] + beta[2] * x, sigma);
+}
+'
+
+x <- dt$x
+N <- nrow(dt)
+y <- dt$y
+complete.pool.data <- list(N = N, x = x, y=y)
+
+complete_pool_stan <- stan(model_code=complete_pooled_code, data=complete.pool.data, iter=500, warmup=200,
+                 chains= 3, thin=2)
+
+# check convergence 
+mcmc.pooled <- As.mcmc.list(complete_pool_stan)
+S <- ggs(mcmc.pooled)
+
+ggs_running(S)
+ggs_autocorrelation(S)
+ggs_compare_partial(S)
+ggs_geweke(S)
+ggs_traceplot(S)
+
+# compare with lm
+monitor(complete_pool_stan, digits_summary = 5)
+
+summary(M0)
+
+####################
+# partial pooling ##
+####################
+
+partial_pooled_code = '
+data {
+  int<lower=0> N;
+  int<lower=0> J;
+  int<lower=0, upper=J> county[N];
+  vector[N] x;
+  vector[N] y;
+}
+parameters {
+  vector[J] a;
+  real b;
+  real mu_a;
+  real<lower=0> sigma_y;
+  real<lower=0> sigma_a;
+}
+model {
+  a ~ normal(mu_a, sigma_a);
+  for (n in 1:N)
+    y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
+}
+'
+
+J <- length(unique(dt$county))
+county <- rep(1:85, table(dt$county))
+
+partial.pool.data <- list(N = N, J =J, x = x, y=y, county = county)
+
+partial_pool_stan <- stan(model_code=partial_pooled_code, data=partial.pool.data, iter=1000, warmup=200,
+                           chains= 3, thin=2)
+
+monitor(partial_pool_stan, digits_summary = 5)
+
+# compare with lmer()
+coef(M1)$county
+ranef(M1)
+
+###############
+# no pooling ##
+###############
+
+no_pooled_code = '
+data {
+  int<lower=0> N;
+  int<lower=0> J;
+  vector[N] y;
+  vector[N] x;
+  int<lower=0, upper=J> county[N];
+}
+parameters {
+  vector[J] a;
+  real b;
+  real<lower=0> sigma_y;
+}
+model {
+  for (i in 1:N)
+    y[i] ~ normal(a[county[i]] + b * x[i], sigma_y);
+}
+'
+
+no.pool.data <- list(N = N, J =J, x = x, y=y, county = county)
+no_pool_stan <- stan(model_code=no_pooled_code, data=no.pool.data, iter=5000, warmup=200,
+                          chains= 3, thin=2)
+
+# compare with lm fixed effects
+monitor(no_pool_stan, digits_summary = 5)
+summary(M2)
