@@ -186,3 +186,39 @@ stan.fit <- stan(model_code=stan.code, data=stan.data, iter=500, warmup=200,
 
 monitor(stan.fit)
 
+
+##################################################
+# much simpler solution using built-in function ##
+##################################################
+
+irt <- ideal(rc, store.item=TRUE)
+save(irt, file = "ideal_irt.Rdata")
+
+load("ideal_irt.Rdata")
+
+# analysis of results
+summary(irt)
+
+irt1 <- ideal(rc, d=1, store.item=TRUE, maxiter=50000, thin=200, 
+             burnin=10000, verbose=TRUE)
+save(irt1, file="ideal_irt1.Rdata")
+
+load("ideal_irt1.Rdata")
+
+# analysis of results
+summary(irt1)
+
+# W-NOMINATE algorithm
+library(wnominate)
+nom <- wnominate(rc, dims=1, polarity=c("Cruz (R-TX)", "Cochran (R-MS)"))
+
+# compare three methods
+theta <- data.frame(monitor(stan.fit))[grep("theta", rownames(monitor(stan.fit))),]
+
+par(mfrow=c(1,3))
+plot(irt1$xbar[,1], theta$mean, 
+     xlab="IRT ideal point (1D)", ylab="Stan")
+plot(nom$legislators$coord1D, theta$mean,
+     xlab="W-NOMINATE (1D)", ylab="stan")
+plot(nom$legislators$coord1D, irt1$xbar[,1],
+     xlab="W-NOMINATE (1D)", ylab="IRT ideal point (1D)")
