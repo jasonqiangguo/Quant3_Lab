@@ -296,7 +296,7 @@ summary(M2)
 
 
 ####################################################
-# we can add priors for the partial pooling case ###
+# we can add hyperparameters for the partial pooling case ###
 ####################################################
 
 partial_pooled_prior_code = '
