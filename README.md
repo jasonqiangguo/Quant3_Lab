@@ -25,8 +25,8 @@ This repository contains a selection of recitation materials prepared by Jason G
 - [Tobit Model and Heckman Selection Model](w9/week9.R) [(slides)](w9/w9.pdf)
 
 ## Bayesian statistics ##
-- [MCMC introduction](w10/week10_introduction.R) [(slides)](w10/week10.pdf)
+- [MCMC Introduction](w10/week10_introduction.R) [(slides)](w10/week10.pdf)
 - [Gibbs Sampler and Metropolis-Hastings Algorithm in R](w10/mcmc_example.R)
-- [IRT model](w11/irt.R) [(slides)](w11/IRT_model.pdf)
-- [Multilevel model](w11/multilevel.R) [(slides)](w11/multilevel_model.pdf)
-- [MRP implementation in RStan](w11/mrp.R)
+- [IRT Model](w11/irt.R) [(slides)](w11/IRT_model.pdf)
+- [Multilevel Model](w11/multilevel.R) [(slides)](w11/multilevel_model.pdf)
+- [MRP Implementation with RStan](w11/mrp.R)
