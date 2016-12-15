@@ -32,6 +32,9 @@ This repository contains a selection of recitation materials prepared by Jason G
 - [MRP Implementation with RStan](w11/mrp.R)
 
 ## Introduction to Machine Learning ##
+### Slides ###
+- [Introduction to Machine Learning](w12/machine_learning.pdf)
+### Code ###
 - [K-mean Clustering](w12/kmean_clustering.R)
 - [Principal Component Analysis](w12/pca.R)
 - [Gaussian Mixture Model](w12/mixture_model.R)
