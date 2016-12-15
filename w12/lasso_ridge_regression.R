@@ -1,5 +1,5 @@
 ######################################################
-# unsurpervised learning: lasso and ridge regression #
+# surpervised learning: lasso and ridge regression #
 # Jason Guo, Quant 3 Lab                             #
 ######################################################
 
