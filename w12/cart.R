@@ -1,5 +1,5 @@
 ######################################################
-# unsurpervised learning: CART                       #
+# surpervised learning: CART                       #
 # Jason Guo, Quant 3 Lab                             #
 ######################################################
 
