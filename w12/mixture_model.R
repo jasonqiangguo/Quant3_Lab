@@ -61,4 +61,4 @@ pred.y <- rnorm(n=N,mean=mix.model$mu[components],sd=mix.model$sigma[components]
 
 stack.data <- stack(data.frame(y, pred.y))
 ggplot(stack.data, aes(values, color = ind)) + geom_density() +
-  scale_color_discrete(name = "group") + theme(panel.grid = element_blank() + )
+  scale_color_discrete(name = "group") + theme(panel.grid = element_blank())
