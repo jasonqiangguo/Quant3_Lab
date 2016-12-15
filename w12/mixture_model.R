@@ -17,7 +17,7 @@ y <- rnorm(n=N,mean=mus[components],sd=sds[components])
 plot(y)
 plot(density(y))
 
-# first, lets do it mannually, only consider the mus at this moment and taken variance estimate as given
+# first, lets do it mannually, only consider the mus at this moment and take variance estimate as given
 mu_1 <- 0
 mu_2 <- 1
 
