@@ -17,11 +17,11 @@ This repository contains a selection of recitation materials prepared by Jason G
 - [Response Function](w6/response_functions_ADL.R)
 - [Cointegration and Error Correction Model](w6/cointegration_ecm.R) [(Slides)](w6/w6.pdf)
 
-## Time-Series-Cross-Section Data
+## Time-Series-Cross-Section Data ##
 - [Panel Corrected Standard Errors](w7/w7.R) [(Slides)](w7/TSCS.pdf)
 - [Fixed Effects and Random Effects in Panel Data](w8/week8.R) [(slides)](w8/TSCS2.pdf) 
 
-## Sample Selection Model
+## Sample Selection Model ##
 - [Tobit Model and Heckman Selection Model](w9/week9.R) [(slides)](w9/w9.pdf)
 
 ## Bayesian statistics ##
@@ -30,3 +30,9 @@ This repository contains a selection of recitation materials prepared by Jason G
 - [IRT Model](w11/irt.R) [(slides)](w11/IRT_model.pdf)
 - [Multilevel Model](w11/multilevel.R) [(slides)](w11/multilevel_model.pdf)
 - [MRP Implementation with RStan](w11/mrp.R)
+
+## Introduction to Machine Learning ##
+- [K-mean Clustering](w12/kmean_clustering.R)
+- [Principal Component Analysis](w12/pca.R)
+- [Gaussian Mixture Model](w12/mixture_model.R)
+- [Lasso and Ridge Regression](w12/lasso_ridge_regression.R)
