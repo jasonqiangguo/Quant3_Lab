@@ -1,4 +1,4 @@
-## Quantitative Analysis 3 for Political Science, PhD-level course at NYU, 2016 Fall##
+## Quantitative Analysis 3 for Political Science, PhD-level course at NYU, 2016 Fall ##
 
 This repository contains a selection of recitation materials prepared by Jason Guo for the PhD-level quantitative methods course "Quantitative Analysis 3 for Political Science" at N.Y.U., taught by [Prof. Nathaniel Beck](http://politics.as.nyu.edu/object/nathanielbeck) in the Fall of 2016 at New York University.
 
